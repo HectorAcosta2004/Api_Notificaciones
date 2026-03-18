@@ -7,8 +7,16 @@ class Message {
         $this->conn = $db;
     }
 
-    // Guardar el registro del mensaje enviado
     public function create($user_id, $app_id, $titulo, $descripcion) {
+        // Validaciones de seguridad (Punto 3)
+        if(empty($titulo) || empty($descripcion)) {
+            return false;
+        }
+
+        // Limpieza de etiquetas HTML para evitar inyecciones básicas
+        $titulo = strip_tags($titulo);
+        $descripcion = strip_tags($descripcion);
+
         $query = "INSERT INTO " . $this->table_name . " 
                   SET user_id=:user_id, app_id=:app_id, titulo=:titulo, descripcion=:descripcion, fecha_envio=NOW()";
 
@@ -19,10 +27,6 @@ class Message {
         $stmt->bindParam(":titulo", $titulo);
         $stmt->bindParam(":descripcion", $descripcion);
 
-        if($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
 }
-?>
