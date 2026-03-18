@@ -9,7 +9,8 @@ $database = new Database();
 $db = $database->getConnection();
 $user = new User($db);
 
-$stmt = $user->read();
+// Aquí es donde ocurría el error en la línea 14
+$stmt = $user->read(); 
 $num = $stmt->rowCount();
 
 if($num > 0) {

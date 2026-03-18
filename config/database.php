@@ -10,9 +10,12 @@ class Database {
         $this->conn = null;
         try {
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
             $this->conn->exec("set names utf8mb4");
         } catch(PDOException $exception) {
-            echo "Error de conexión: " . $exception->getMessage();
+            header('Content-Type: application/json');
+            echo json_encode(["status" => "error", "message" => "Error de BD"]);
+            exit;
         }
         return $this->conn;
     }
